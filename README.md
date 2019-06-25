@@ -1,1 +1,6 @@
 # Nano_ESP8266_Trigger
+
+Remember to change
+TRACKING_ADDRESS
+WIFISSID
+WIFIPASS
