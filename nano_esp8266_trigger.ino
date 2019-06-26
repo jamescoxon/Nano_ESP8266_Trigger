@@ -1,7 +1,9 @@
 /*
- * WebSocketClient.ino
+ * Nano ESP8266 Trigger
+ * Based on https://github.com/jamescoxon/Nano_Callback_System/blob/master/arduino_esp32/arduino_esp32.ino
+ * Built up from the example code: WebSocketClient.ino
  *
- *  Created on: 24.05.2015
+ * Uses WebSockets Library https://github.com/Links2004/arduinoWebSockets which is LGPL, library remains untouched.
  *
  */
 
@@ -18,6 +20,8 @@ WebSocketsClient webSocket;
 #define TRACKING_ADDRESS "xrb_3jwrszth46rk1mu7rmb4rhm54us8yg1gw3ipodftqtikf5yqdyr7471nsg1k"
 #define WIFISSID "NANOUKMEETUP"
 #define WIFIPASS "NANO2019"
+
+#define LED_PIN 16
 
 StaticJsonDocument<200> doc;
 StaticJsonDocument<1024> rx_doc;
@@ -60,10 +64,17 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 
       Serial.println(block_amount);
       if (block_amount.toInt() > 100) {
-        digitalWrite(5, HIGH);
-        delay(2000);
-        digitalWrite(5, LOW);
+        if (LED_PIN == 16) {
+          digitalWrite(LED_PIN,LOW);
+          delay(2000);
+          digitalWrite(LED_PIN, HIGH); 
         }
+      else{
+          digitalWrite(LED_PIN,HIGH);
+          delay(2000);
+          digitalWrite(LED_PIN, LOW);
+      }
+      }
       // send message to server
       // webSocket.sendTXT("message here");
       break;
@@ -86,10 +97,18 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 }
 
 void setup() {
-  pinMode(5, OUTPUT);
-  digitalWrite(5,HIGH);
-  delay(1000);
-  digitalWrite(5, LOW);
+  pinMode(LED_PIN, OUTPUT);
+  if (LED_PIN == 16) {
+    digitalWrite(LED_PIN,LOW);
+    delay(1000);
+    digitalWrite(LED_PIN, HIGH); 
+  }
+  else{
+    digitalWrite(LED_PIN,HIGH);
+    delay(1000);
+    digitalWrite(LED_PIN, LOW);
+  }
+
 	// USE_SERIAL.begin(921600);
 	USE_SERIAL.begin(115200);
 
